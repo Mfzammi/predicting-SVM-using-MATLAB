@@ -1,0 +1,42 @@
+clc
+load('dataht0.mat')
+dataht=flipud(dataht);
+IndTrain=1:7411;
+IndVal=8001:7411;
+IndTesting=7412:11110;
+Xtr=dataht(IndTrain,1:3);
+Ytr=dataht(IndTrain,5);
+
+Xts=dataht(IndTesting,1:3);
+Yts=dataht(IndTesting,5);
+
+net=feedforwardnet([10]);
+net.divideParam.trainRatio=0.9;
+net.divideParam.valRatio=0.1;
+
+net=fitrsvm(Xtr,Ytr)
+%%
+close all
+Ytro=predict(net,Xtr);
+Ytso=predict(net,Xts);
+
+mbetrain=mbe(Ytro,Ytr)
+mbetesting=mbe(Ytso, Yts)
+
+r2train=rsquare(Ytro,Ytr)
+r2testing=rsquare(Ytso, Yts)
+close
+figure
+histogram(Ytr)
+grid
+xlabel('Humidity')
+ylabel('Frequency')
+
+indtt=1:200;
+
+figure
+
+plot(indtt,Yts(indtt));
+hold
+plot(indtt,Ytso(indtt));
+hold
